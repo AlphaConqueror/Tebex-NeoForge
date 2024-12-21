@@ -1,0 +1,28 @@
+group = 'io.tebex'
+version = '2.1.0'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'java-library'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    javadoc {
+        options.addStringOption('Xdoclint:-missing', '-quiet')
+    }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+}

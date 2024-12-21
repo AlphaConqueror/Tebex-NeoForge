@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
+    id 'net.neoforged.gradle.userdev' version '7.0.171'
+}
+
+group = rootProject.group
+version = rootProject.version
+
+def minecraftVersion = properties['minecraft_version'] as String
+def neoVersion = properties['neo_version'] as String
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
+dependencies {
+    shade project(':sdk')
+
+    shade('com.github.cryptomorin:XSeries:9.3.1') {
+        transitive = false
+    }
+
+    shade "net.neoforged:neoforge:${neoVersion}"
+    compileOnly 'dev.dejvokep:boosted-yaml:1.3'
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+
+    filesMatching('**/neoforge.mods.toml') {
+        expand 'version': version
+    }
+}
+
+shadowJar {
+    archiveFileName.set("tebex-${project.name}-${version}.jar")
+    configurations = [project.configurations.shade]
+
+    relocate 'okhttp3', 'io.tebex.plugin.libs.okhttp3'
+    relocate 'okio', 'io.tebex.plugin.libs.okio'
+    relocate 'dev.dejvokep.boostedyaml', 'io.tebex.plugin.libs.boostedyaml'
+    relocate 'org.jetbrains.annotations', 'io.tebex.plugin.libs.jetbrains'
+    relocate 'kotlin', 'io.tebex.plugin.libs.kotlin'
+    relocate 'com.google.gson', 'io.tebex.plugin.libs.gson'
+    minimize()
+}
+
+artifacts {
+    archives shadowJar
+}

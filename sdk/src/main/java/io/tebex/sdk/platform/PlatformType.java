@@ -23,5 +23,10 @@ public enum PlatformType {
     /**
      * Represents the Fabric server platform.
      */
-    FABRIC
+    FABRIC,
+
+    /**
+     * Represents the NeoForge server platform.
+     */
+    NEOFORGE
 }
