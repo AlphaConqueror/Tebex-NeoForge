@@ -98,6 +98,7 @@ public class TebexPlugin implements Platform, Supplier<ModContainer> {
     @SubscribeEvent
     public void onServerStopping(final ServerStoppingEvent ignored) {
         Multithreading.shutdown();
+        sdk.shutdown();
     }
 
     @SubscribeEvent
